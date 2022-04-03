@@ -1,115 +1,158 @@
 import 'package:flutter/material.dart';
 
+import './result.dart';
+import './quiz.dart';
+
 void main() {
-  runApp(const MyApp());
+  runApp(const App());
 }
 
-class MyApp extends StatelessWidget {
-  const MyApp({Key? key}) : super(key: key);
-
-  // This widget is the root of your application.
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Flutter Demo',
-      theme: ThemeData(
-        // This is the theme of your application.
-        //
-        // Try running your application with "flutter run". You'll see the
-        // application has a blue toolbar. Then, without quitting the app, try
-        // changing the primarySwatch below to Colors.green and then invoke
-        // "hot reload" (press "r" in the console where you ran "flutter run",
-        // or simply save your changes to "hot reload" in a Flutter IDE).
-        // Notice that the counter didn't reset back to zero; the application
-        // is not restarted.
-        primarySwatch: Colors.blue,
-      ),
-      home: const MyHomePage(title: 'Flutter Demo Home Page'),
-    );
-  }
-}
-
-class MyHomePage extends StatefulWidget {
-  const MyHomePage({Key? key, required this.title}) : super(key: key);
-
-  // This widget is the home page of your application. It is stateful, meaning
-  // that it has a State object (defined below) that contains fields that affect
-  // how it looks.
-
-  // This class is the configuration for the state. It holds the values (in this
-  // case the title) provided by the parent (in this case the App widget) and
-  // used by the build method of the State. Fields in a Widget subclass are
-  // always marked "final".
-
-  final String title;
+class App extends StatefulWidget {
+  const App({Key? key}) : super(key: key);
 
   @override
-  State<MyHomePage> createState() => _MyHomePageState();
+  State<App> createState() => _AppState();
 }
 
-class _MyHomePageState extends State<MyHomePage> {
-  int _counter = 0;
+class _AppState extends State<App> {
+  final _questions = [
+    {
+      'question':
+          'Who was given the title "Full Metal" in the anime series "Full Metal Alchemist"?',
+      'correctAnswer': 'Edward Elric',
+      'answers': [
+        'Alphonse Elric',
+        'Van Hohenheim',
+        'Izumi Curtis',
+        'Edward Elric'
+      ]
+    },
+    {
+      'question':
+          'What caused the titular mascot of Yo-Kai Watch" Jibanyan" to become a yokai?',
+      'correctAnswer': 'Being run over by a truck',
+      'answers': [
+        'Ate one too many chocobars',
+        'Through a magical ritual',
+        'When he put on the harmaki',
+        'Being run over by a truck'
+      ]
+    },
+    {
+      'question': 'What year did "Attack on Titan" Season 2 begin airing?',
+      'correctAnswer': '2017',
+      'answers': ['2018', '2019', '2020', '2017']
+    },
+    {
+      'question':
+          'In "One Piece" who confirms the existence of the legendary treasure\' One Piece?',
+      'correctAnswer': 'Edward "Whitebeard" Newgate',
+      'answers': [
+        'Former Marine Fleet Admiral Sengoku',
+        'Pirate King Gol D Roger',
+        'Silvers Rayleigh',
+        'Edward "Whitebeard" Newgate'
+      ]
+    },
+    {
+      'question': 'In "Highschool DxD"\' Koneko Toujou is from what race?',
+      'correctAnswer': 'Nekomata',
+      'answers': ['Kitsune', 'Human', 'Kappa', 'Nekomata']
+    },
+    {
+      'question':
+          'In "To Love-Ru" who is the first to hear of Yami\'s past from her?',
+      'correctAnswer': 'Rito',
+      'answers': ['Mikan', 'Lala', 'Haruna', 'Rito']
+    },
+    {
+      'question': 'What animation studio produced "Gurren Lagann"?',
+      'correctAnswer': 'Gainax',
+      'answers': ['Kyoto Animation', 'Pierrot', 'A-1 Pictures', 'Gainax']
+    },
+    {
+      'question':
+          'What was the reason for the banning of episode 35 of the "Pokémon Original Series" Anime?',
+      'correctAnswer': 'Gun Usage',
+      'answers': ['Flashing Images', 'Jynx', 'Strong Violence', 'Gun Usage']
+    },
+    {
+      'question':
+          'In "Love Live: School Idol Project" what pseudonym does Kotori Minami use in her job as a maid?',
+      'correctAnswer': 'Minalinsky',
+      'answers': ['Stanoytchev', 'Kuznetsov', 'Aqours', 'Minalinsky']
+    }
+  ];
+  int _questionIndex = 0;
+  int _score = 0;
+  static bool _isDark = false;
 
-  void _incrementCounter() {
+  void _answerQuestion(selected, correct) {
     setState(() {
-      // This call to setState tells the Flutter framework that something has
-      // changed in this State, which causes it to rerun the build method below
-      // so that the display can reflect the updated values. If we changed
-      // _counter without calling setState(), then the build method would not be
-      // called again, and so nothing would appear to happen.
-      _counter++;
+      _questionIndex = _questionIndex + 1;
+    });
+    if (selected == correct) {
+      _score += 1;
+    }
+  }
+
+  void _switchTheme() {
+    setState(() {
+      _isDark = !_isDark;
+    });
+  }
+
+  void _resetQuiz() {
+    setState(() {
+      _score = 0;
+      _questionIndex = 0;
+      _questions.shuffle();
     });
   }
 
   @override
   Widget build(BuildContext context) {
-    // This method is rerun every time setState is called, for instance as done
-    // by the _incrementCounter method above.
-    //
-    // The Flutter framework has been optimized to make rerunning build methods
-    // fast, so that you can just rebuild anything that needs updating rather
-    // than having to individually change instances of widgets.
-    return Scaffold(
-      appBar: AppBar(
-        // Here we take the value from the MyHomePage object that was created by
-        // the App.build method, and use it to set our appbar title.
-        title: Text(widget.title),
+    _questions.shuffle();
+    return MaterialApp(
+      title: 'Quiz App?',
+      theme: ThemeData(
+        colorScheme: _isDark
+            ? const ColorScheme.dark(
+                primary: Colors.teal,
+              )
+            : const ColorScheme.light(
+                primary: Colors.teal,
+              ),
+        textTheme: const TextTheme(
+          bodyText2: TextStyle(fontSize: 18),
+          bodyText1: TextStyle(fontSize: 18),
+        ),
       ),
-      body: Center(
-        // Center is a layout widget. It takes a single child and positions it
-        // in the middle of the parent.
-        child: Column(
-          // Column is also a layout widget. It takes a list of children and
-          // arranges them vertically. By default, it sizes itself to fit its
-          // children horizontally, and tries to be as tall as its parent.
-          //
-          // Invoke "debug painting" (press "p" in the console, choose the
-          // "Toggle Debug Paint" action from the Flutter Inspector in Android
-          // Studio, or the "Toggle Debug Paint" command in Visual Studio Code)
-          // to see the wireframe for each widget.
-          //
-          // Column has various properties to control how it sizes itself and
-          // how it positions its children. Here we use mainAxisAlignment to
-          // center the children vertically; the main axis here is the vertical
-          // axis because Columns are vertical (the cross axis would be
-          // horizontal).
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            const Text(
-              'You have pushed the button this many times:',
-            ),
-            Text(
-              '$_counter',
-              style: Theme.of(context).textTheme.headline4,
+      home: Scaffold(
+        appBar: AppBar(
+          title: const Text('Quiz App'),
+          leading: const Icon(Icons.handshake),
+          actions: [
+            IconButton(
+              onPressed: _switchTheme,
+              icon: _isDark
+                  ? const Icon(Icons.sunny)
+                  : const Icon(Icons.nightlight),
             ),
           ],
         ),
+        body: _questionIndex < _questions.length
+            ? Quiz(
+                answerQuestion: _answerQuestion,
+                questionIndex: _questionIndex,
+                questions: _questions,
+              )
+            : Result(
+                questions: _questions.length,
+                score: _score,
+                resetQuiz: _resetQuiz,
+              ),
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _incrementCounter,
-        tooltip: 'Increment',
-        child: const Icon(Icons.add),
-      ), // This trailing comma makes auto-formatting nicer for build methods.
     );
   }
 }
